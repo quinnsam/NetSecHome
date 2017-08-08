@@ -1,0 +1,273 @@
+homeassistant:
+  # Name of the location where Home Assistant is running
+  name: Home
+  # Location required to calculate the time the sun rises and sets
+  latitude: 45.2429
+  longitude: -122.4030
+  # Impacts weather/sunrise data (altitude above sea level in meters)
+  elevation: 342
+  # metric for Metric, imperial for Imperial
+  unit_system: imperial
+  # Pick yours from here: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+  time_zone: America/Los_Angeles
+
+  customize: !include customize.yaml
+
+# Show links to resources in log and frontend
+#introduction:
+
+# Enables the frontend
+frontend:
+
+# Enables configuration UI
+config:
+
+http:
+  # Uncomment this to add a password (recommended!)
+  api_password: !secret http_password
+  # Uncomment this if you are using SSL or running in Docker etc
+  base_url: !secret home_url
+  ssl_certificate: /etc/letsencrypt/live/mobkilla.no-ip.biz/fullchain.pem
+  ssl_key: /etc/letsencrypt/live/mobkilla.no-ip.biz/privkey.pem
+  trusted_networks:
+      - 10.0.0.0/24
+      - 10.0.10.0/24
+  ip_ban_enabled: True
+  login_attempts_threshold: 3
+  
+
+# Checks for available updates
+updater:
+
+# Discover some devices automatically
+discovery:
+
+# Allows you to issue voice commands from the frontend in enabled browsers
+conversation:
+
+# Enables support for tracking state changes over time.
+history:
+
+# View all events in a logbook
+logbook:
+
+# Track the sun
+sun:
+
+# Weather Prediction
+sensor:
+    - platform: yweather
+      name: Weather
+      monitored_conditions:
+          - weather_current
+          - temperature
+    - platform: moon
+    - platform: crimereports
+      name: Crime Reports
+      radius: 8045
+    - platform: speedtest
+      hour:
+          - 0
+          - 6
+          - 12
+          - 18
+      minute: 00
+      monitored_conditions:
+          - ping
+          - download
+          - upload
+    - platform: pi_hole
+      host: 10.0.0.4
+      monitored_conditions: ads_blocked_today
+    - platform: transmission
+      host: 10.0.0.99
+      username: !secret main_username
+      password: !secret transmission_password
+      monitored_variables: 'upload_speed'
+    - platform: coinmarketcap
+    - platform: mqtt
+      state_topic: 'home/ike/cond'
+      name: 'Humidity'
+      unit_of_measurment: '%'
+      value_template: '{{ value_json.humidity }}'
+    
+    - platform: mqtt
+      state_topic: 'home/ike/cond'
+      name: 'Tempature'
+      unit_of_measurment: '°C'
+      value_template: '{{ value_json.temperature }}'
+    
+    - platform: mqtt
+      state_topic: 'home/bedroom/temperature'
+      name: 'Garage Temp'
+      unit_of_measurment: '°F'
+    
+    - platform: mqtt
+      state_topic: 'home/bedroom/humidity'
+      name: 'Garage Humidity'
+      unit_of_measurment: '%'
+
+    - platform: mqtt
+      state_topic: 'home/bedroom/light'
+      name: 'Garage Light'
+      
+
+binary_sensor:
+    - platform: mqtt
+      name: 'Zone 1'
+      state_topic: 'home/netsec/out'
+      value_template: '{{ value_json.zone1 }}'
+    
+    - platform: mqtt
+      name: 'Zone 2'
+      state_topic: 'home/netsec/out'
+      value_template: '{{ value_json.zone2 }}'
+    
+    - platform: mqtt
+      name: 'Zone 3'
+      state_topic: 'home/netsec/out'
+      value_template: '{{ value_json.zone3 }}'
+
+    - platform: mqtt
+      name: 'Zone 4'
+      state_topic: 'home/garage/motion'
+    
+light:
+  - platform: mqtt
+    name: "Office Light"
+    command_topic: "home/office/light_in"
+    state_topic: "home/office/light_out"
+    payload_on: "on"
+    payload_off: "off"
+    
+  - platform: mqtt
+    name: "Ike Light"
+    command_topic: "home/ike/light_in"
+    state_topic: "home/ike/light_out"
+    payload_on: "1"
+    payload_off: "0"
+
+
+# Text to speech
+tts:
+    - platform: google
+      cache: true
+      cache_dir: /tmp/tts
+      time_memory: 300
+
+switch:
+    - platform: mqtt
+      name: "Fish Bubbles"
+      command_topic: "home/fish/bubbles"
+      payload_on: "1"
+      payload_off: "0"
+      optimistic: false
+
+    - platform: mqtt
+      name: "Fish Light"
+      command_topic: "home/fish/light"
+      payload_on: "1"
+      payload_off: "0"
+      optimistic: false
+
+    - platform: mqtt
+      name: "Arm House"
+      command_topic: "home/netsec/in"
+      state_topic: 'home/netsec/out'
+      value_template: '{{ value_json.arm }}'
+    
+    - platform: mqtt
+      name: "Security Alarm"
+      command_topic: "home/netsec/in"
+      payload_on: "ALARM_ON"
+      payload_off: "ALARM_OFF"
+      state_topic: 'home/netsec/out'
+      value_template: '{{ value_json.alarm }}'
+
+lock:
+  platform: mqtt
+  name: "FrontDoor"
+  command_topic: "home/door/in"
+  state_topic: "home/door/out"
+  payload_lock: "1"
+  payload_unlock: "0"
+
+android_ip_webcam:
+    - host: 10.0.10.30
+
+device_tracker:
+    - platform: unifi
+      host: 10.0.0.99
+      username: !secret router_username
+      password: !secret unifi_password 
+      interval_seconds: 10
+      verify_ssl: false
+      track_new_devices: false
+      
+
+ifttt:
+ key: !secret ifttt_password 
+
+camera:
+  - platform: mjpeg
+    name: Garage_cam
+    authentication: digest
+    username: !secret main_username 
+    password: !secret garage_cam_password
+    mjpeg_url: http://10.0.0.99:5656/
+
+mqtt:
+ broker: localhost
+ port: 1883
+ client_id: home-assistant-1
+ username: !secret mqtt_username
+ password: !secret mqtt_password
+
+#media_player:
+#    - platform: plex
+#      use_episode_art: true
+
+input_boolean:
+    vacation_mode:
+      name: When nobody is home for 24 hours
+      initial: off
+      icon: mdi:airplane-takeoff
+    
+    anyone_home:
+      name: Is anyone home
+      initial: off
+      icon: mdi:home
+
+    hide_misc:
+      name: Hide Misc
+      initial: on
+      icon: mdi:garage
+
+    lockdown_mode:
+      name: LockDown Mode
+      initial: off
+      icon: mdi:shield
+
+    garage_light_boolean:
+      name: Garage light boolean
+      initial: off
+
+notify:
+    - name: Pushbullet
+      platform: pushbullet
+      api_key: !secret pushbullet_key
+
+#apiai:
+#  intents:
+#    GetIkeTemp:
+#      speech: Ike is at {{ states.sensor.tempature.state }} degrees celcius
+#      async_action: False
+#      action:
+#        service: notify.pushbullet
+#        data:
+#          message: Api.ai has sent a request
+
+
+automation: !include automation.yaml
+group: !include groups.yaml
+

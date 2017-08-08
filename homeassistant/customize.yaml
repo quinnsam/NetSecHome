@@ -1,0 +1,50 @@
+switch.fish_bubbles:
+    icon: mdi:chart-bubble
+switch.fish_light:
+    icon: mdi:lightbulb
+device_tracker.xi:
+    icon: mdi:desktop-tower
+device_tracker.ximint:
+    icon: mdi:desktop-tower
+device_tracker.rancher:
+    icon: mdi:desktop-tower
+device_tracker.pihole:
+    icon: mdi:desktop-tower
+device_tracker.zetawin10:
+    icon: mdi:desktop-tower
+sensor.crime_reports:
+    icon: mdi:pistol
+sensor.transmission_up_speed:
+    icon: mdi:arrow-up
+sensor.humidity:
+    icon: mdi:cloud
+sensor.tempature:
+    icon: mdi:chart-areaspline
+binary_sensor.heat_lamp:
+    icon: mdi:lightbulb
+binary_sensor.zone_1:
+    icon: mdi:bullseye
+binary_sensor.zone_2:
+    icon: mdi:bullseye
+binary_sensor.zone_3:
+    icon: mdi:bullseye
+binary_sensor.zone_4:
+    icon: mdi:bullseye
+binary_sensor.arm_status:
+    icon: mdi:lock
+binary_sensor.alarm_status:
+    icon: mdi:bell-ring
+switch.arm_house:
+    icon: mdi:lock
+switch.security_alarm:
+    icon: mdi:bell-ring
+switch.office_light:
+    icon: mdi:lightbulb
+switch.ike_light:
+    icon: mdi:lightbulb
+sensor.bedroom_temp:
+    icon: mdi:thermometer
+sensor.bedroom_humidity:
+    icon: mdi:cloud
+sensor.bedroom_light:
+    icon: mdi:weather-sunny

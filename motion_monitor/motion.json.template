@@ -1,0 +1,11 @@
+{
+    "blynk_api": "http://blynk-cloud.com/<API KEY>",
+    "pushbullet_api": "<pushbullet API KEY>",
+    "log_file": "<log file path>",
+    "pic_name": "<Picture Name>",
+    "last_pic": "<last pic date file>",
+    "last_motion": "<last motion date file>",
+    "pic_flock": "<pic mutex>",
+    "motion_flock": "<motion mutex>",
+    "time_delta": "<time in seconds>"
+}

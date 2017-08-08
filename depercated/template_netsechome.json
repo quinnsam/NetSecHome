@@ -1,0 +1,11 @@
+{
+    "unifi_server": "https://<unifi server ip>:8443",
+    "username": "<unifi username>",
+    "password": "<unifi password>",
+    "logfile": "<path to netsechome.log>",
+    "blynk_api": "http://blynk-cloud.com/<blynk API key>",
+    "user_id": {
+        "<user0>": "<unifi client_id>",
+        "<user1>": "<unifi client_id>"
+    }
+}

@@ -1,0 +1,433 @@
+#-------------------------------------------------------------------------------
+#
+#             _____ _     _       _____           _    
+#            |  ___(_)___| |__   |_   _|_ _ _ __ | | __
+#            | |_  | / __| '_ \    | |/ _` | '_ \| |/ /
+#            |  _| | \__ \ | | |   | | (_| | | | |   < 
+#            |_|   |_|___/_| |_|   |_|\__,_|_| |_|_|\_\
+#                                          
+#
+#-------------------------------------------------------------------------------
+
+- alias: "Sunset Turn off Fish light"  
+  hide_entity: true
+  trigger:
+      platform: sun
+      event: sunset
+  action:
+      - service: switch.turn_off
+        entity_id: switch.fish_light
+
+- alias: "Sunrise Turn on Fish light"  
+  hide_entity: true
+  trigger:
+      platform: sun
+      event: sunrise
+  action:
+      - service: switch.turn_on
+        entity_id: switch.fish_light
+
+#-------------------------------------------------------------------------------
+#
+#                         _____         _       
+#                        |_   _|__  ___| |_ ___ 
+#                          | |/ _ \/ __| __/ __|
+#                          | |  __/\__ \ |_\__ \
+#                          |_|\___||___/\__|___/
+#                       
+#                
+#-------------------------------------------------------------------------------
+
+- alias: "Set Vaciton mode"
+  hide_entity: true
+  condition:
+    condition: state
+    entity_id: input_boolean.vacation_mode
+    state: 'off'
+  trigger:
+    platform: state
+    entity_id: input_boolean.anyone_home
+    to: 'off'
+    for:
+      hours: 24
+      minutes: 00
+      seconds: 00
+  action:
+    - service: homeassistant.turn_on
+      entity_id: input_boolean.vacation_mode
+    - service: notify.pushbullet
+      data:
+        message: Vacation on.
+    - service: homeassistant.turn_on
+      entity_id: input_boolean.lockdown_mode
+
+- alias: "Turn off Vacation mode"
+  hide_entity: true
+  condition:
+    condition: state
+    entity_id: input_boolean.vacation_mode
+    state: 'on'
+  trigger:
+    platform: state
+    entity_id: input_boolean.anyone_home
+    from: 'off'
+    to: 'on'
+  action:
+    - service: homeassistant.turn_off
+      entity_id: input_boolean.vacation_mode
+    - service: notify.pushbullet
+      data:
+        message: Vacation off.
+    - service: homeassistant.turn_off
+      entity_id: input_boolean.lockdown_mode
+
+- alias: "Set varible when away"
+  hide_entity: true
+  condition:
+    condition: and
+    conditions:
+      - condition: state
+        entity_id: device_tracker.regansiphone
+        state: 'not_home'
+      - condition: state
+        entity_id: device_tracker.sam_nexus6p
+        state: 'not_home'
+      - condition: state
+        entity_id: input_boolean.anyone_home
+        state: 'on'
+  trigger:
+    platform: time
+    minutes: '/2'
+    seconds: 00
+  action:
+    service: homeassistant.turn_off
+    entity_id: input_boolean.anyone_home
+
+- alias: "Set varible when home"
+  hide_entity: true
+  condition:
+    condition: state
+    entity_id: input_boolean.anyone_home
+    state: 'off'
+  trigger:
+    - platform: state
+      entity_id: device_tracker.sam_nexus6p
+      from: 'not_home'
+      to: 'home'
+    - platform: state
+      entity_id: device_tracker.regansiphone
+      from: 'not_home'
+      to: 'home'
+  action:
+    service: homeassistant.turn_on
+    entity_id: input_boolean.anyone_home
+
+- alias: "Auto Arm house"
+  condition:
+    condition: state
+    entity_id: switch.arm_house
+    state: 'off'
+  trigger:
+    platform: state
+    entity_id: input_boolean.anyone_home
+    from: "on"
+    to: "off"
+  action:
+    - service: notify.pushbullet
+      data:
+        message: Home is now armed
+    - service: homeassistant.turn_on
+      entity_id: switch.arm_house
+
+- alias: "Auto Disarm house"
+  condition:
+    condition: state
+    entity_id: switch.arm_house
+    state: 'on'
+  trigger:
+    platform: state
+    entity_id: input_boolean.anyone_home
+    from: "off"
+    to: "on"
+  action:
+    - service: notify.pushbullet
+      data:
+        message: Home is now disarmed
+    - service: homeassistant.turn_off
+      entity_id: switch.arm_house
+    - service: lock.unlock
+      entity_id: lock.frontdoor
+
+- alias: "Presence PM"
+  condition:
+    condition: and
+    conditions:
+      - condition: state
+        entity_id: switch.arm_house
+        state: 'off'
+      - condition: state
+        entity_id: input_boolean.anyone_home
+        state: 'on'
+      - condition: time
+        after: '23:00:00'
+      - condition: state
+        entity_id: binary_sensor.zone_3
+        state: 'on'
+        for:
+          minutes: 15
+  trigger:
+    platform: time
+    minutes: '/1'
+    seconds: 00
+  action:
+    - service: notify.pushbullet
+      data:
+        message: Presence PM
+    - service: homeassistant.turn_on
+      entity_id: switch.arm_house
+    - service: tts.google_say
+      entity_id: media_player.living_room_home
+      data:
+        message: 'Motion not detected downstairs. Arming house now.'
+
+- alias: "Presence AM"
+  condition:
+    condition: and
+    conditions:
+      - condition: state
+        entity_id: switch.arm_house
+        state: 'on'
+      - condition: state
+        entity_id: input_boolean.anyone_home
+        state: 'on'
+  trigger:
+    platform: time
+    at: '07:00:00'
+  action:
+    - service: notify.pushbullet
+      data:
+        message: Presence AM
+    - service: homeassistant.turn_off
+      entity_id: switch.arm_house
+
+- alias: "Notify if Front door is open"
+  hide_entity: true
+  trigger:
+    platform: state
+    entity_id: binary_sensor.zone_1
+    to: 'off'
+    for:
+      minutes: 15
+  action:
+    - service: notify.pushbullet
+      data:
+        message: Front Door has been open for 15 minutes
+    - service: tts.google_say
+      entity_id: media_player.living_room_home
+      data:
+        message: 'The front door has been open for 15 minutes.'
+
+- alias: "Notify if sliding door is open"
+  hide_entity: true
+  trigger:
+    platform: state
+    entity_id: binary_sensor.zone_2
+    to: 'off'
+    for:
+      minutes: 15
+  action:
+    - service: notify.pushbullet
+      data:
+        message: Sliding Door has been open for 15 minutes
+    - service: tts.google_say
+      entity_id: media_player.living_room_home
+      data:
+        message: 'The sliding door has been open for 15 minutes.'
+
+- alias: "Notify if front door has not locked"
+  hide_entity: true
+  trigger:
+    platform: state
+    entity_id: lock.frontdoor
+    to: 'unlocked'
+    for:
+      minutes: 15
+  action:
+    - service: notify.pushbullet
+      data:
+        message: The front door has not been locked for 15 minutes
+    - service: tts.google_say
+      entity_id: media_player.living_room_home
+      data:
+        message: 'The front door has not been locked for 15 minutes.'
+
+- alias: "Pretend to be home on vacation"
+  hide_entity: true
+  condition:
+    condition: state
+    entity_id: input_boolean.vacation_mode
+    state: 'on'
+  trigger:
+    platform: sun
+    event: sunset
+    offset: '-00:45:00'
+  action:
+    - service: light.turn_on
+      entity_id: light.office_light
+    - service: notify.pushbullet
+      data:
+        message: Mimic Being home on
+
+- alias: "Vacation turn off light"
+  hide_entity: true
+  condition:
+    condition: state
+    entity_id: input_boolean.vacation_mode
+    state: 'on'
+  trigger:
+    platform: time
+    at: '23:47:00'
+  action:
+    - service: light.turn_off
+      entity_id: light.office_light
+    - service: notify.pushbullet
+      data:
+        message: Mimic Going to sleep
+
+- alias: "Hide Misc"
+  hide_entity: true
+  trigger:
+    platform: state
+    entity_id: input_boolean.hide_misc
+    from: 'off'
+    to: 'on'
+  action:
+    - service: group.set_visibility
+      entity_id: group.misc
+      data:
+        visible: false
+    - service: group.set_visibility
+      entity_id: group.servers
+      data:
+        visible: false
+
+- alias: "Show Misc"
+  hide_entity: true
+  trigger:
+    platform: state
+    entity_id: input_boolean.hide_misc
+    from: 'on'
+    to: 'off'
+  action:
+    - service: group.set_visibility
+      entity_id: group.misc
+      data:
+        visible: true
+    - service: group.set_visibility
+      entity_id: group.servers
+      data:
+        visible: true
+
+
+- alias: "lockdown_automation"
+  hide_entity: true
+  condition:
+    condition: state
+    entity_id: input_boolean.lockdown_mode
+    state: 'on'
+  trigger:
+    - platform: state
+      entity_id: lock.frontdoor
+      from: 'locked'
+      to: 'unlocked'
+    - platform: state
+      entity_id: binary_sensor.zone_1
+      from: 'on'
+      to: 'off'
+    - platform: state
+      entity_id: binary_sensor.zone_2
+      from: 'on'
+      to: 'off'
+    - platform: state
+      entity_id: binary_sensor.zone_3
+      from: 'on'
+      to: 'off'
+    - platform: state
+      entity_id: binary_sensor.zone_4
+      from: 'on'
+      to: 'off'
+  action:
+    - service: tts.google_say
+      entity_id: media_player.living_room_home
+      data:
+        message: 'Intruder detected contacting authorities now'
+    - service: notify.pushbullet
+      data:
+        message: Intruder detected
+
+- alias: "Garage Motion"
+  condition:
+    condition: state
+    entity_id: switch.arm_house
+    state: 'on'
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.zone_4
+      from: 'on'
+      to: 'off'
+  action:
+    - service: notify.pushbullet
+      data:
+        message: 'Motion has been detected in the garage'
+
+- alias: "Garage Light-Detection boolean on"
+  hide_entity: true
+  trigger:
+    platform: numeric_state
+    entity_id: sensor.garage_light
+    above: 20
+  action:
+    - service: homeassistant.turn_on
+      entity_id: input_boolean.garage_light_boolean
+
+- alias: "Garage Light-Detection boolean off"
+  hide_entity: true
+  trigger:
+    platform: numeric_state
+    entity_id: sensor.garage_light
+    below: 18
+  action:
+    - service: homeassistant.turn_off
+      entity_id: input_boolean.garage_light_boolean
+
+- alias: "Garage Light-Detection boolean"
+  hide_entity: true
+  trigger:
+    platform: state
+    entity_id: input_boolean.garage_light_boolean 
+    to: 'on'
+    for:
+      minutes: 15
+  action:
+    - service: notify.pushbullet
+      data:
+        message: The garage has been illuminated for 15 minutes
+    - service: tts.google_say
+      entity_id: media_player.living_room_home
+      data:
+        message: 'The garage has been illuminated for 15 minutes.'
+
+- alias: "Garage Temp"
+  hide_entity: false
+  trigger:
+    platform: numeric_state
+    entity_id: sensor.garage_temp
+    above: 90
+  action:
+    - service: notify.pushbullet
+      data:
+        message: The garage is above 90 degrees.
+    - service: tts.google_say
+      entity_id: media_player.living_room_home
+      data:
+        message: 'The garage is above 90 degrees.'
