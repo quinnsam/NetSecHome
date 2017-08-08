@@ -257,6 +257,7 @@ notify:
       platform: pushbullet
       api_key: !secret pushbullet_key
 
+# API.ai documentation has changed this will not work
 #apiai:
 #  intents:
 #    GetIkeTemp:
@@ -270,4 +271,3 @@ notify:
 
 automation: !include automation.yaml
 group: !include groups.yaml
-
