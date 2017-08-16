@@ -269,5 +269,5 @@ notify:
 #          message: Api.ai has sent a request
 
 
-automation: !include automation.yaml
+automation: !include automations.yaml
 group: !include groups.yaml
