@@ -27,8 +27,8 @@ http:
   api_password: !secret http_password
   # Uncomment this if you are using SSL or running in Docker etc
   base_url: !secret home_url
-  ssl_certificate: /etc/letsencrypt/live/mobkilla.no-ip.biz/fullchain.pem
-  ssl_key: /etc/letsencrypt/live/mobkilla.no-ip.biz/privkey.pem
+  ssl_certificate: /home/homeassistant/.homeassistant/fullchain.pem
+  ssl_key: /home/homeassistant/.homeassistant/privkey.pem
   trusted_networks:
       - 10.0.0.0/24
       - 10.0.10.0/24
@@ -184,6 +184,12 @@ switch:
       state_topic: 'home/netsec/out'
       value_template: '{{ value_json.alarm }}'
 
+    - platform: mqtt
+      name: "Living-Room TV"
+      command_topic: "home/tv/in"
+      payload_on: "1"
+      payload_off: "0"
+
 lock:
   platform: mqtt
   name: "FrontDoor"
@@ -208,13 +214,13 @@ device_tracker:
 ifttt:
  key: !secret ifttt_password 
 
-camera:
-  - platform: mjpeg
-    name: Garage_cam
-    authentication: digest
-    username: !secret main_username 
-    password: !secret garage_cam_password
-    mjpeg_url: http://10.0.0.99:5656/
+#camera:
+#  - platform: mjpeg
+#    name: Garage_cam
+#    authentication: digest
+#    username: !secret main_username 
+#    password: !secret garage_cam_password
+#    mjpeg_url: http://10.0.10.43:8081/
 
 mqtt:
  broker: localhost
@@ -271,3 +277,4 @@ notify:
 
 automation: !include automations.yaml
 group: !include groups.yaml
+script: !include scripts.yaml

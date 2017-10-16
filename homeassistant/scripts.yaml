@@ -1,0 +1,17 @@
+volume_up:
+  alias: TV Volume up
+  sequence:
+    - service: mqtt.publish
+      data: {"topic":"home/tv/in", "payload":"2"}
+
+volume_down:
+  alias: TV Volume down
+  sequence:
+    - service: mqtt.publish
+      data: {"topic":"home/tv/in", "payload":"3"}
+
+calibrate_door:
+  alias: Calibrate front door
+  sequence:
+    - service: mqtt.publish
+      data: {"topic":"home/door/in", "payload":"3"}

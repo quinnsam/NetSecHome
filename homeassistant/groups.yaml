@@ -1,10 +1,11 @@
-Locks: lock.frontdoor
-Fish_Tank: switch.fish_bubbles, switch.fish_light
-Servers: device_tracker.xi, device_tracker.ximint, device_tracker.rancher, device_tracker.pihole, device_tracker.zetawin10
-People: device_tracker.sam_nexus6p, device_tracker.regansiphone
-Weather: sensor.weather_current, sensor.weather_temperature, sun.sun, sensor.moon 
-Misc: sensor.crime_reports, sensor.bitcoin, sensor.ip_webcam_audio_connections, sensor.ip_webcam_video_connections
-Net: sensor.pihole_ads_blocked_today, sensor.speedtest_ping, sensor.speedtest_download, sensor.speedtest_upload, sensor.transmission_up_speed
-Ike_Tank: sensor.humidity, sensor.tempature, light.ike_light
+People: device_tracker.sam_pixel, device_tracker.regansiphone
+Locks: lock.frontdoor, script.calibrate_door
 Security: binary_sensor.zone_1, binary_sensor.zone_2, binary_sensor.zone_3, binary_sensor.zone_4, switch.security_alarm, switch.arm_house
+TV: switch.livingroom_tv, script.volume_up, script.volume_down
+Fish_Tank: switch.fish_bubbles, switch.fish_light
+Weather: sensor.weather_current, sensor.weather_temperature, sun.sun, sensor.moon 
+Servers: device_tracker.xi, device_tracker.ximint, device_tracker.rancher, device_tracker.pihole, device_tracker.zetawin10
+Net: sensor.pihole_ads_blocked_today, sensor.speedtest_ping, sensor.speedtest_download, sensor.speedtest_upload, sensor.transmission_up_speed
 Garage: sensor.garage_humidity, sensor.garage_temp, sensor.garage_light, input_boolean.garage_light_boolean, camera.garage_cam
+Misc: sensor.crime_reports, sensor.bitcoin, sensor.ip_webcam_audio_connections, sensor.ip_webcam_video_connections
+Ike_Tank: sensor.humidity, sensor.tempature, light.ike_light

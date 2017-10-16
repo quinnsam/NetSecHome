@@ -91,7 +91,7 @@
         entity_id: device_tracker.regansiphone
         state: 'not_home'
       - condition: state
-        entity_id: device_tracker.sam_nexus6p
+        entity_id: device_tracker.sam_pixel
         state: 'not_home'
       - condition: state
         entity_id: input_boolean.anyone_home
@@ -113,7 +113,7 @@
     state: 'off'
   trigger:
     - platform: state
-      entity_id: device_tracker.sam_nexus6p
+      entity_id: device_tracker.sam_pixel
       from: 'not_home'
       to: 'home'
     - platform: state
@@ -287,6 +287,35 @@
     - service: notify.pushbullet
       data:
         message: Mimic Going to sleep
+
+
+- id: Home_12
+  alias: "Individual unlock front door when presence detected"
+  hide_entity: false
+  condition:
+    condition: and
+    conditions:
+      - condition: state
+        entity_id: input_boolean.anyone_home
+        state: 'on'
+      - condition: time
+        after: '09:00:00'
+        before: '23:00:00'
+  trigger:
+    - platform: state
+      entity_id: device_tracker.sam_pixel
+      from: 'not_home'
+      to: 'home'
+    - platform: state
+      entity_id: device_tracker.regansiphone
+      from: 'not_home'
+      to: 'home'
+  action:
+    - service: notify.pushbullet
+      data:
+        message: Individual unlock
+    - service: lock.unlock
+      entity_id: lock.frontdoor
 
 ################################################################################
 #                 
@@ -478,3 +507,24 @@
       entity_id: media_player.living_room_home
       data:
         message: 'The garage is above 90 degrees.'
+
+################################################################################
+#                            _______     __
+#                           |_   _\ \   / /
+#                             | |  \ \ / / 
+#                             | |   \ V /  
+#                             |_|    \_/   
+#                                          
+################################################################################
+- id: TV_1
+  alias: "Chromecast Auto off - off"
+  hide_entity: true
+  trigger:
+    platform: state
+    entity_id: media_player.living_room
+    to: 'off'
+    for: 
+      minutes: 15
+  action:
+  - service: homeassistant.turn_off
+    entity_id: switch.livingroom_tv

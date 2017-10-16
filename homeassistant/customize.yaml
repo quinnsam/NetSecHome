@@ -48,3 +48,9 @@ sensor.bedroom_humidity:
     icon: mdi:cloud
 sensor.bedroom_light:
     icon: mdi:weather-sunny
+switch.livingroom_tv:
+    icon: mdi:television-classic
+script.volume_up:
+    icon: mdi:volume-plus
+script.volume_down:
+    icon: mdi:volume-minus
