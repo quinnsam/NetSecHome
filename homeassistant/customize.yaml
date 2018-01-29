@@ -1,56 +1,65 @@
 switch.fish_bubbles:
-    icon: mdi:chart-bubble
+  icon: mdi:chart-bubble
 switch.fish_light:
-    icon: mdi:lightbulb
+  icon: mdi:lightbulb
 device_tracker.xi:
-    icon: mdi:desktop-tower
+  icon: mdi:desktop-tower
 device_tracker.ximint:
-    icon: mdi:desktop-tower
+  icon: mdi:desktop-tower
 device_tracker.rancher:
-    icon: mdi:desktop-tower
+  icon: mdi:desktop-tower
 device_tracker.pihole:
-    icon: mdi:desktop-tower
+  icon: mdi:desktop-tower
 device_tracker.zetawin10:
-    icon: mdi:desktop-tower
+  icon: mdi:desktop-tower
+device_tracker.wazo:
+  icon: mdi:desktop-tower
+device_tracker.tand_e20:
+  icon: mdi:deskphone
 sensor.crime_reports:
-    icon: mdi:pistol
+  icon: mdi:pistol
 sensor.transmission_up_speed:
-    icon: mdi:arrow-up
+  icon: mdi:arrow-up
 sensor.humidity:
-    icon: mdi:cloud
+  icon: mdi:cloud
 sensor.tempature:
-    icon: mdi:chart-areaspline
+  icon: mdi:chart-areaspline
 binary_sensor.heat_lamp:
-    icon: mdi:lightbulb
+  icon: mdi:lightbulb
 binary_sensor.zone_1:
-    icon: mdi:bullseye
+  icon: mdi:bullseye
 binary_sensor.zone_2:
-    icon: mdi:bullseye
+  icon: mdi:bullseye
 binary_sensor.zone_3:
-    icon: mdi:bullseye
+  icon: mdi:bullseye
 binary_sensor.zone_4:
-    icon: mdi:bullseye
+  icon: mdi:bullseye
 binary_sensor.arm_status:
-    icon: mdi:lock
+  icon: mdi:lock
 binary_sensor.alarm_status:
-    icon: mdi:bell-ring
+  icon: mdi:bell-ring
 switch.arm_house:
-    icon: mdi:lock
+  icon: mdi:lock
 switch.security_alarm:
-    icon: mdi:bell-ring
+  icon: mdi:bell-ring
 switch.office_light:
-    icon: mdi:lightbulb
+  icon: mdi:lightbulb
 switch.ike_light:
-    icon: mdi:lightbulb
+  icon: mdi:lightbulb
 sensor.bedroom_temp:
-    icon: mdi:thermometer
+  icon: mdi:thermometer
 sensor.bedroom_humidity:
-    icon: mdi:cloud
+  icon: mdi:cloud
 sensor.bedroom_light:
-    icon: mdi:weather-sunny
+  icon: mdi:weather-sunny
 switch.livingroom_tv:
-    icon: mdi:television-classic
+  icon: mdi:television-classic
 script.volume_up:
-    icon: mdi:volume-plus
+  icon: mdi:volume-plus
 script.volume_down:
-    icon: mdi:volume-minus
+  icon: mdi:volume-minus
+
+
+
+group.all_automations:
+  hidden: false

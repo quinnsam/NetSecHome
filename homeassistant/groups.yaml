@@ -1,11 +1,178 @@
-People: device_tracker.sam_pixel, device_tracker.regansiphone
-Locks: lock.frontdoor, script.calibrate_door
-Security: binary_sensor.zone_1, binary_sensor.zone_2, binary_sensor.zone_3, binary_sensor.zone_4, switch.security_alarm, switch.arm_house
-TV: switch.livingroom_tv, script.volume_up, script.volume_down
-Fish_Tank: switch.fish_bubbles, switch.fish_light
-Weather: sensor.weather_current, sensor.weather_temperature, sun.sun, sensor.moon 
-Servers: device_tracker.xi, device_tracker.ximint, device_tracker.rancher, device_tracker.pihole, device_tracker.zetawin10
-Net: sensor.pihole_ads_blocked_today, sensor.speedtest_ping, sensor.speedtest_download, sensor.speedtest_upload, sensor.transmission_up_speed
-Garage: sensor.garage_humidity, sensor.garage_temp, sensor.garage_light, input_boolean.garage_light_boolean, camera.garage_cam
-Misc: sensor.crime_reports, sensor.bitcoin, sensor.ip_webcam_audio_connections, sensor.ip_webcam_video_connections
-Ike_Tank: sensor.humidity, sensor.tempature, light.ike_light
+default_view:
+  name: Home
+  view: true
+  icon: mdi:home
+  entities:
+    - group.People
+    - group.Locks
+    - light.office_light
+    - light.bedroom_light
+    - group.Weather
+
+Media:
+  name: Media
+  view: true
+  icon: mdi:youtube-tv
+  entities:
+    - group.TV
+    - group.Chromecasts
+
+Security:
+  name: Security
+  view: true
+  icon: mdi:lock
+  entities:
+    - group.Security_Sensors
+    - group.Security_booleans
+    - group.Ring
+    - group.Cameras
+    - group.People
+    - group.Locks
+
+Network:
+  name: Network
+  view: true
+  icon: mdi:server-network
+  entities:
+    - group.Net
+    - group.Servers
+
+Miscellaneous:
+  name: Miscellaneous
+  view: true
+  icon: mdi:animation
+  entities:
+    - group.Misc 
+    - group.Fish_Tank
+    - group.Ike_Tank
+    - group.Garage
+
+Automation:
+  name: Automations
+  view: true
+  icon: mdi:robot
+  entities:
+    - group.all_automations
+
+People: 
+  name: People
+  entities:
+    - device_tracker.sam_pixel
+    - device_tracker.regansiphone
+
+Locks:
+  name: Locks
+  entities:
+    - lock.frontdoor
+    - script.calibrate_door
+
+Security_Sensors: 
+  name: Security Sensors
+  entities:
+    - binary_sensor.zone_1
+    - binary_sensor.zone_2
+    - binary_sensor.zone_3
+    - switch.security_alarm
+    - switch.arm_house
+
+Security_booleans:
+  name: Security Input Booleans
+  entities:
+    - input_boolean.anyone_home
+    - input_boolean.lockdown_mode
+    - input_boolean.vacation_mode
+Ring: 
+  name: Ring Doorbell
+  entities:
+    - sensor.ring_front_door_battery
+    - sensor.ring_front_door_last_activity
+    - sensor.ring_front_door_last_ding
+    - sensor.ring_front_door_last_motion
+    - sensor.ring_front_door_volume
+    - sensor.ring_front_door_wifi_signal_category
+    - sensor.ring_front_door_wifi_signal_strength
+    - sensor.ring_downstairs_volume
+    - sensor.ring_downstairs_wifi_signal_category
+    - sensor.ring_downstairs_wifi_signal_strength
+
+TV: 
+  name: TV
+  entities:
+    - switch.livingroom_tv
+    - script.volume_up
+    - script.volume_down
+
+Fish_Tank:
+  name: Fish Tank
+  entities:
+    - switch.fish_bubbles
+    - switch.fish_light
+
+Weather:
+  name: Weather
+  entities:
+    - sensor.weather_current
+    - sensor.weather_temperature
+    - sun.sun
+    - sensor.moon
+
+Servers: 
+  name: Servers
+  entities:
+    - device_tracker.xi
+    - device_tracker.ximint
+    - device_tracker.rancher
+    - device_tracker.pihole
+    - device_tracker.zetawin10
+    - device_tracker.wazo
+    - device_tracker.tand_e20
+
+Net:
+  name: Network Status
+  entities:
+    - sensor.pihole_ads_blocked_today
+    - sensor.speedtest_ping
+    - sensor.speedtest_download
+    - sensor.speedtest_upload
+    - sensor.transmission_up_speed
+
+Cameras:
+  name: Cameras
+  entities:
+    - camera.guudgo
+    - camera.front_yard
+    - switch.front_yard_night_vision
+    - switch.front_yard_torch
+    - sensor.front_yard_audio_connections
+    - sensor.front_yard_video_connections
+
+Garage:
+  name: Garage Sensors
+  entities:
+    - sensor.garage_humidity
+    - sensor.garage_temp
+    - sensor.garage_light
+    - input_boolean.garage_light_boolean
+    - camera.garage_cam
+
+Ike_Tank:
+  name: Ike Tank Sensors
+  entities:
+    - sensor.humidity
+    - sensor.tempature
+    - light.ike_light
+
+Misc:
+  name: Misc Stuff
+  entities:
+    - sensor.crime_reports
+    - sensor.bitcoin
+
+Chromecasts:
+  name: Chromecast Devices
+  entities:
+    - media_player.living_room_home
+    - media_player.bedroom_speaker
+    - media_player.living_room
+    - media_player.bedroom
+    - media_player.home_group

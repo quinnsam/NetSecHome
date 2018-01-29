@@ -246,7 +246,7 @@
       to: 'off'
   action:
     - service: tts.google_say
-      entity_id: media_player.living_room_home
+      entity_id: media_player.home_group
       data:
         message: 'Intruder detected contacting authorities now'
     - service: notify.pushbullet
@@ -263,10 +263,12 @@
   trigger:
     platform: sun
     event: sunset
-    offset: '-00:45:00'
+    offset: '-00:15:00'
   action:
     - service: light.turn_on
       entity_id: light.office_light
+    - service: light.turn_on
+      entity_id: light.bedroom_light
     - service: notify.pushbullet
       data:
         message: Mimic Being home on
@@ -284,6 +286,8 @@
   action:
     - service: light.turn_off
       entity_id: light.office_light
+    - service: light.turn_off
+      entity_id: light.bedroom_light
     - service: notify.pushbullet
       data:
         message: Mimic Going to sleep
@@ -298,6 +302,8 @@
       - condition: state
         entity_id: input_boolean.anyone_home
         state: 'on'
+        for:
+          minutes: 15
       - condition: time
         after: '09:00:00'
         before: '23:00:00'
@@ -382,6 +388,7 @@
       data:
         message: 'The front door has not been locked for 15 minutes.'
 
+
 ################################################################################
 #                        __  __ _          
 #                       |  \/  (_)___  ___ 
@@ -391,41 +398,6 @@
 #                                          
 ################################################################################
 
-- id: Misc_1
-  alias: "Hide Misc"
-  hide_entity: true
-  trigger:
-    platform: state
-    entity_id: input_boolean.hide_misc
-    from: 'off'
-    to: 'on'
-  action:
-    - service: group.set_visibility
-      entity_id: group.misc
-      data:
-        visible: false
-    - service: group.set_visibility
-      entity_id: group.servers
-      data:
-        visible: false
-
-- id: Misc_2
-  alias: "Show Misc"
-  hide_entity: true
-  trigger:
-    platform: state
-    entity_id: input_boolean.hide_misc
-    from: 'on'
-    to: 'off'
-  action:
-    - service: group.set_visibility
-      entity_id: group.misc
-      data:
-        visible: true
-    - service: group.set_visibility
-      entity_id: group.servers
-      data:
-        visible: true
 
 ################################################################################
 #                      ____                            
@@ -437,22 +409,6 @@
 ################################################################################
 
 - id: Garage_1
-  alias: "Garage Motion"
-  condition:
-    condition: state
-    entity_id: switch.arm_house
-    state: 'on'
-  trigger:
-    - platform: state
-      entity_id: binary_sensor.zone_4
-      from: 'on'
-      to: 'off'
-  action:
-    - service: notify.pushbullet
-      data:
-        message: 'Motion has been detected in the garage'
-
-- id: Garage_2
   alias: "Garage Light-Detection boolean on"
   hide_entity: true
   trigger:
@@ -463,7 +419,7 @@
     - service: homeassistant.turn_on
       entity_id: input_boolean.garage_light_boolean
 
-- id: Garage_3
+- id: Garage_2
   alias: "Garage Light-Detection boolean off"
   hide_entity: true
   trigger:
@@ -474,7 +430,7 @@
     - service: homeassistant.turn_off
       entity_id: input_boolean.garage_light_boolean
 
-- id: Garage_4
+- id: Garage_3
   alias: "Garage Light-Detection boolean"
   hide_entity: true
   trigger:
@@ -492,7 +448,7 @@
       data:
         message: 'The garage has been illuminated for 15 minutes.'
 
-- id: Garage_5
+- id: Garage_4
   alias: "Garage Temp"
   hide_entity: false
   trigger:
